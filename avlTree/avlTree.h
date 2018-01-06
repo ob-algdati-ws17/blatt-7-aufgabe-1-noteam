@@ -21,10 +21,36 @@ private :
         Node *lastNode = nullptr;
         int balance = 0;
 
-        vector<int> *preorder() const;  // (Hauptreihenfolge)
-        vector<int> *inorder() const;   // (Symmetrische Reihenfolge)
-        vector<int> *postorder() const; // (Nebenreihenfolge)
+
+        Node(int key, Node* lastNode);
+
+        Node(int key, Node* lastNode, Node* left, Node* right, int balance);
+
+        ~node();
+
+        void calculateBalance();
     };
+    Node* firstNode = nullptr;
+
+    void upIn(Node* start);
+
+    void upOut(Node* start);
+
+    void rotateLeft(Node* rotateThis);
+
+    void rotateRight(Node* rotateThis);
+
+    Node* searchRecursive(Node* start, int key, bool previous);
+
+    void noLeaf(Node* removeNode);
+
+    void leafRight(Node* removeNode);
+
+    void leafLeft(Node* removeNode);
+
+    void twoLeafs(Node* removeNode);
+
+    void removeRotation(Node* previous,Node* removeNode,bool leftSide);
 
 public :
 
