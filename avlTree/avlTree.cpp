@@ -5,6 +5,11 @@
 #include "avlTree.h"
 
 using namespace std;
+//-----Destruct Tree------//
+
+avlTree::~AVLTree() {
+    delete firstNode;
+}
 
 //-----Node Methoden------//
 
@@ -26,12 +31,21 @@ void avlTree::Node::calculateBalance() {
     if (this->right == nullptr && this->left == nullptr) {
         this->balance = 0;
     } else if (this->right == nullptr) {
-        this->balance = -left->balance;
+        this->balance = -1/*left->balance*/;
     } else if (this->left == nullptr) {
-        this->balance = right->balance;
+        this->balance = 1/*right->balance*/;
     } else {
         this->balance = right->balance - left->balance;
     }
 }
+
+bool avlTree::Node::hasChild() {
+    if (left == nullptr && right == nullptr) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
 
 

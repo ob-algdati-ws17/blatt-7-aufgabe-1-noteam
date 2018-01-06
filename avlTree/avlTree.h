@@ -29,6 +29,8 @@ private :
         ~node();
 
         void calculateBalance();
+
+        bool hasChild();
     };
     Node* firstNode = nullptr;
 
