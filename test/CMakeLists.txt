@@ -8,6 +8,7 @@ endif (APPLE)
 add_executable(testList ${SRCS} ../avlTree/avlTree.h ../avlTree/avlTree.cpp)
 
 target_link_libraries(testList
+        avltree
         gtest
         gmock
 )

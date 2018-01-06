@@ -7,7 +7,7 @@
 using namespace std;
 //-----Destruct Tree------//
 
-avlTree::~AVLTree() {
+avlTree::~avlTree() {
     delete firstNode;
 }
 
@@ -22,7 +22,7 @@ avlTree::Node::Node(int key, Node* lastNode, Node* left, Node* right, int balanc
    this->calculateBalance();
 }
 
-avlTree::Node::~node() {
+avlTree::Node::~Node() {
     delete left;
     delete right;
 }

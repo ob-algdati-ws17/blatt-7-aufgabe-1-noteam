@@ -26,7 +26,7 @@ private :
 
         Node(int key, Node* lastNode, Node* left, Node* right, int balance);
 
-        ~node();
+        ~Node();
 
         void calculateBalance();
 
@@ -56,7 +56,7 @@ private :
 
 public :
 
-    ~AVLTree();
+    ~avlTree();
 
     void insert(const int value);
     void remove(const int value);
