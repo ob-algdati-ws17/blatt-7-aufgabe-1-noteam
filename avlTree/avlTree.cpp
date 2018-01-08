@@ -47,5 +47,10 @@ bool avlTree::Node::hasChild() {
     }
 }
 
+//----private Methoden-----//
 
 
+
+void avlTree::upIn(Node *start) {
+
+}
