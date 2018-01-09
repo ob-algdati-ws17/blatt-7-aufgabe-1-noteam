@@ -1,8 +1,8 @@
+#include "avlTree.h"
 //
 // Created by hm-nwimmer on 19.12.2017.
 //
-#include <vector>
-#include "avlTree.h"
+
 
 using namespace std;
 //-----Destruct Tree------//
@@ -39,7 +39,7 @@ bool avlTree::Node::hasChild() {
 //----private Methoden-----//
 
 
-Node* avlTree::getSymmetricFollower(Node* node) {
+avlTree::Node *avlTree::getSymmetricFollower(Node *node) {
     Node* current = node->right;
     while (true) {
         if (current->left == nullptr) {
@@ -84,7 +84,9 @@ void avlTree::upIn(Node *start) {
     }
 }
 
-void avlTree::upOut(Node* start);
+void avlTree::upOut(Node* start){
+
+}
 
 // rotate Methoden
 
@@ -124,16 +126,10 @@ void avlTree::rotateRight(Node* node) {
     }
 }
 
-//Delete Methoden
-void avlTree::noLeaf(Node* removeNode);
 
-void avlTree::leafRight(Node* removeNode);
+void avlTree::removeRotation(Node* previous,Node* removeNode,bool leftSide) {
 
-void avlTree::leafLeft(Node* removeNode);
-
-void avlTree::twoLeafs(Node* removeNode);
-
-void avlTree::removeRotation(Node* previous,Node* removeNode,bool leftSide);
+}
 
 
 
