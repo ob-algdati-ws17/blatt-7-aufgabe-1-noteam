@@ -18,21 +18,23 @@ private :
         int key;
         Node *left = nullptr;
         Node *right = nullptr;
-        Node *lastNode = nullptr;
+        Node *parent = nullptr;
         int balance = 0;
 
 
-        Node(int key, Node* lastNode);
+        Node(int key, Node* parent);
 
-        Node(int key, Node* lastNode, Node* left, Node* right, int balance);
+        Node(int key, Node* parent, Node* left, Node* right, int balance);
 
         ~Node();
 
-        void calculateBalance();
+
 
         bool hasChild();
     };
     Node* firstNode = nullptr;
+
+    int getSymmetricFollower(Node* node);
 
     void upIn(Node* start);
 
@@ -41,8 +43,6 @@ private :
     void rotateLeft(Node* rotateThis);
 
     void rotateRight(Node* rotateThis);
-
-    Node* searchRecursive(Node* start, int key, bool previous);
 
     void noLeaf(Node* removeNode);
 
@@ -54,16 +54,20 @@ private :
 
     void removeRotation(Node* previous,Node* removeNode,bool leftSide);
 
+    int calculateBalance();
+
+    int getHeight(Node* p);
+
 public :
 
     ~avlTree();
 
     void insert(const int value);
     void remove(const int value);
+    void remove(const int value, Node* node);
     bool search(const int value) const;
+    bool search(const int value, Node* node) const;
 
-    std::vector<int> *preorder() const;  // (Hauptreihenfolge)
-    std::vector<int> *inorder() const;   // (Symmetrische Reihenfolge)
-    std::vector<int> *postorder() const; // (Nebenreihenfolge)
+
 
 };
