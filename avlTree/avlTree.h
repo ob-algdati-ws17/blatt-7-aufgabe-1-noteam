@@ -34,7 +34,7 @@ private :
     };
     Node* firstNode = nullptr;
 
-    int getSymmetricFollower(Node* node);
+    Node* getSymmetricFollower(Node* node);
 
     void upIn(Node* start);
 

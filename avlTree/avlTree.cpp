@@ -39,11 +39,11 @@ bool avlTree::Node::hasChild() {
 //----private Methoden-----//
 
 
-int avlTree::getSymmetricFollower(Node* node) {
+Node* avlTree::getSymmetricFollower(Node* node) {
     Node* current = node->right;
     while (true) {
         if (current->left == nullptr) {
-            return current->key;
+            return current;
         } else {
             current = current->left;
         }
@@ -258,7 +258,13 @@ void avlTree::remove(const int value, Node *node) {
         // Fall 3 Beide Nachfolger Knoten
         // Symmetrischer Nachfolger
         else {
-
+            Node* symmetric = getSymmetricFollower(node);
+            node->key = symmetric->key;
+            remove(value, symmetric);
         }
+    } else {
+        remove(value,node->left);
+        remove(value,node->right);
     }
 }
+
