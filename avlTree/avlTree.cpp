@@ -277,70 +277,72 @@ void avlTree::remove(const int value) {
 
 void avlTree::remove(const int value, Node *node) {
     int q = 0;
-    if (node->key == value) {
-        if (!node->hasChild()) {
-            if (node == node->parent->left) {
-                node->parent->left = nullptr;
-                q = getHeight(node->parent);
-                if (q == 1) {
-                    node->parent->balance = 1;
-                } else if (q == 0){
-                    upOut(node->parent);
-                } else {
-                    if (node->parent->right->left != nullptr) {
-                        rotateRight(node->parent->right);
-                        rotateLeft(node->parent);
+    if (node->hasChild()) {
+        if (node->key == value) {
+            if (!node->hasChild()) {
+                if (node == node->parent->left) {
+                    node->parent->left = nullptr;
+                    q = getHeight(node->parent);
+                    if (q == 1) {
+                        node->parent->balance = 1;
+                    } else if (q == 0) {
+                        upOut(node->parent);
                     } else {
-                        rotateLeft(node->parent);
+                        if (node->parent->right->left != nullptr) {
+                            rotateRight(node->parent->right);
+                            rotateLeft(node->parent);
+                        } else {
+                            rotateLeft(node->parent);
+                        }
+                        upOut(node->parent);
                     }
-                    upOut(node->parent);
-                }
-            } else {
-                node->parent->right = nullptr;
-                q = getHeight(node->parent);
-                if (q == 1) {
-                    node->parent->balance = 1;
-                } else if (q == 0){
-                    upOut(node->parent);
                 } else {
-                    if (node->parent->left->right != nullptr) {
-                        rotateLeft(node->parent->left);
-                        rotateRight(node->parent);
+                    node->parent->right = nullptr;
+                    q = getHeight(node->parent);
+                    if (q == 1) {
+                        node->parent->balance = 1;
+                    } else if (q == 0) {
+                        upOut(node->parent);
                     } else {
-                        rotateRight(node->parent);
+                        if (node->parent->left->right != nullptr) {
+                            rotateLeft(node->parent->left);
+                            rotateRight(node->parent);
+                        } else {
+                            rotateRight(node->parent);
+                        }
+                        upOut(node->parent);
                     }
-                    upOut(node->parent);
                 }
-            }
-            upOut(node->parent);
+                upOut(node->parent);
 
-            // Fall 2 1 Knoten 1 Leaf
-        } else if(node->left || node->right == nullptr) {
-            if (node->parent->left == node) {
-                if (node->left == nullptr) {
-                    node->parent->left = node->right;
+                // Fall 2 1 Knoten 1 Leaf
+            } else if (node->left || node->right == nullptr) {
+                if (node->parent->left == node) {
+                    if (node->left == nullptr) {
+                        node->parent->left = node->right;
+                    } else {
+                        node->parent->left = node->right;
+                    }
                 } else {
-                    node->parent->left = node->right;
+                    if (node->left == nullptr) {
+                        node->parent->right = node->right;
+                    } else {
+                        node->parent->right = node->right;
+                    }
                 }
-            } else {
-                if (node->left == nullptr) {
-                    node->parent->right = node->right;
-                } else {
-                    node->parent->right = node->right;
-                }
+                upOut(node->parent);
             }
-            upOut(node->parent);
+                // Fall 3 Beide Nachfolger Knoten
+                // Symmetrischer Nachfolger
+            else {
+                Node *symmetric = getSymmetricFollower(node);
+                node->key = symmetric->key;
+                remove(value, symmetric);
+            }
+        } else {
+            remove(value, node->left);
+            remove(value, node->right);
         }
-        // Fall 3 Beide Nachfolger Knoten
-        // Symmetrischer Nachfolger
-        else {
-            Node* symmetric = getSymmetricFollower(node);
-            node->key = symmetric->key;
-            remove(value, symmetric);
-        }
-    } else {
-        remove(value,node->left);
-        remove(value,node->right);
     }
 }
 

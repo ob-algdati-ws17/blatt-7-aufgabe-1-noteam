@@ -37,12 +37,12 @@ TEST(testList, InsertTwiceSameValue) {
     compareVectors(vector1,tree.inorder());
 }
 
-/*TEST(testList, InsertOneDeleteOne) {
+TEST(testList, InsertOneDeleteOne) {
     avlTree tree;
     tree.insert(3);
     tree.remove(3);
-    compareVectors(nullptr,tree.inorder());
-}*/
+    EXPECT_EQ(nullptr,tree.inorder());
+}
 
 TEST(testList, InsertOneCaseOneAndTwo) {
     avlTree tree;
