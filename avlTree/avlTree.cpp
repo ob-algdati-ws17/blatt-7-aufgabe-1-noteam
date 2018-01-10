@@ -88,7 +88,72 @@ void avlTree::upIn(Node *start) {
 }
 
 void avlTree::upOut(Node* start){
+    //Linke Seite
+    if (start != nullptr && start->parent) {
+        // linker Nachfolger
+        if (start->parent->left == start) {
+            // Fall 1.1 bal P* = -1
+            if (start->parent->balance == -1) {
+                start->parent->balance = 0;
+                upOut(start->parent);
+            }
+            // Fall 1.2 bal P* = 0
+            else if (start->parent->balance == 0) {
+                start->parent->balance = 1;
+                // fertig
+            // Fall 1.3
+            } else {
+                // Fall 1.3.1
+                if (start->parent->right->balance == 0) {
+                    rotateLeft(start->parent);
+                // Fall 1.3.2
+                } else if (start->parent->right->balance == 1) {
+                    Node* myR = start->parent->right;
+                    rotateLeft(start->parent);
+                    upOut(myR);
+                // Fall 1.3.3
+                } else {
+                    Node* myR = start->parent->right->left;
+                    rotateRight(start->parent->right);
+                    rotateLeft(start->parent);
+                    upOut(myR);
+                }
 
+            }
+        // Rechter Nachfolger
+        } else {
+            // Fall 2.1
+            if (start->parent->balance == -1) {
+                start->parent->balance = 0;
+                upOut(start->parent);
+            }
+            // Fall 2.2
+            else if (start->parent->balance == 0) {
+                start->parent->balance = 1;
+                // fertig
+            }
+            // Fall 2.3
+            else {
+                // Fall 2.3.1
+                if (start->parent->left->balance == 0) {
+                    rotateRight(start->parent);
+                }
+                // Fall 2.3.2
+                else if (start->parent->right->balance == 1){
+                    Node* myR = start->parent->left->right;
+                    rotateRight(start->parent);
+                    upOut(myR);
+                }
+                // Fall 2.3.3
+                else {
+                    Node* myR = start->parent->left->right;
+                    rotateLeft(start->parent->right);
+                    rotateRight(start->parent);
+                    upOut(myR);
+                }
+            }
+        }
+    }
 }
 
 // rotate Methoden
@@ -127,17 +192,6 @@ void avlTree::rotateRight(Node* node) {
         leftside->balance +=1;
         node->right = t2;
     }
-}
-
-
-void avlTree::removeRotation(Node* previous,Node* removeNode,bool leftSide) {
-
-}
-
-
-
-int avlTree::calculateBalance() {
-
 }
 
 
@@ -312,30 +366,6 @@ std::vector<int> *avlTree::inorder(Node *node, std::vector<int> *tree) const {
         tree->push_back(node->key);
     } else {
         inorder(node->right,tree);
-    }
-    return tree;
-}
-
-std::vector<int> *avlTree::preorder() const {
-    if (firstNode == nullptr) {
-        return nullptr;
-    } else {
-        auto tree = new std::vector<int>();
-        preorder(firstNode, tree);
-    }
-}
-
-std::vector<int> *avlTree::preorder(Node *node, std::vector<int> *tree) const {
-    if (node == firstNode) {
-        tree->push_back(firstNode->key);
-    }
-    if (node->left != nullptr) {
-        tree->push_back(node->key);
-        preorder(node->left,tree);
-    }
-    if(node->right != nullptr) {
-        tree->push_back(node->key);
-        preorder(node->right, tree);
     }
     return tree;
 }
