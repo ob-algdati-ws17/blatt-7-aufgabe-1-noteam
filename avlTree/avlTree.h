@@ -29,7 +29,7 @@ private :
         ~Node();
 
 
-        bool hasChild();
+        bool hasChild() const;
     };
     Node* firstNode = nullptr;
 

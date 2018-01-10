@@ -1,4 +1,11 @@
 #include "avlTree.h"
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <cmath>
+#include <vector>
+#include <sstream>
+#include <cstdio>
 //
 // Created by hm-nwimmer on 19.12.2017.
 //
@@ -28,12 +35,8 @@ avlTree::Node::~Node() {
 
 
 
-bool avlTree::Node::hasChild() {
-    if (left == nullptr && right == nullptr) {
-        return false;
-    } else {
-        return true;
-    }
+bool avlTree::Node::hasChild() const {
+    return left != nullptr || right != nullptr;
 }
 
 //----private Methoden-----//
@@ -66,11 +69,12 @@ void avlTree::upIn(Node *start) {
                 } else if (start->parent->balance = -1){
                     rotateRight(start->parent);
                 } else {
+                    Node *parent = start->parent;
                     rotateLeft(start);
-                    rotateRight(start->parent);
+                    rotateRight(parent);
                 }
             } else if (start->key > start->parent->key) {
-                if (start->parent->balance = 1) {
+                if (start->parent->balance = -1) {
                     start->parent->balance = 0;
                 } else if (start->parent->balance = 0) {
                     start->parent->balance = 1;
@@ -78,8 +82,9 @@ void avlTree::upIn(Node *start) {
                 } else if (start->balance = 1) {
                     rotateLeft(start->parent);
                 } else {
+                    Node *parent = start->parent;
                     rotateRight(start);
-                    rotateLeft(start->parent);
+                    rotateLeft(parent);
                 }
             }
         }
@@ -166,8 +171,8 @@ void avlTree::rotateLeft(Node* node) {
     Node *t2 = node->right->left;
     if (saveParent == nullptr) {
         firstNode = rightside;
-       firstNode->left = node;
-       node->left = t2;
+        firstNode->left = node;
+        node->left = t2;
     } else {
        saveParent->right = rightside;
         saveParent->balance -= 1;
@@ -190,26 +195,13 @@ void avlTree::rotateRight(Node* node) {
         saveParent->balance += 1;
         leftside->right = node;
         leftside->balance +=1;
-        node->right = t2;
+        node->left = t2;
     }
 }
 
 
 int avlTree::getHeight(Node* p) {
-    Node* links = p;
-    Node* rechts = p;
-    int leftside = 0;
-    int rightside = 0;
-    //Linke Höhe berechnen
-    while (links->hasChild()) {
-        leftside++;
-        links = links->left;
-    }
-    while (rechts->hasChild()) {
-        rightside++;
-        rechts = rechts->right;
-    }
-    return max(rightside,leftside);
+    return max(p->left == nullptr ? 0 : getHeight(p->left) + 1, p->right == nullptr ? 0 : getHeight(p->right) + 1);
 }
 
 
@@ -276,8 +268,13 @@ void avlTree::remove(const int value) {
 }
 
 void avlTree::remove(const int value, Node *node) {
+    if (node == firstNode && !node->hasChild()) {
+        delete node;
+        firstNode = nullptr;
+        return;
+    }
+    Node* parent1 = node->parent;
     int q = 0;
-    if (node->hasChild()) {
         if (node->key == value) {
             if (!node->hasChild()) {
                 if (node == node->parent->left) {
@@ -318,17 +315,28 @@ void avlTree::remove(const int value, Node *node) {
                 // Fall 2 1 Knoten 1 Leaf
             } else if (node->left || node->right == nullptr) {
                 if (node->parent->left == node) {
+                    // Links kein Blatt
                     if (node->left == nullptr) {
-                        node->parent->left = node->right;
+                        parent1->left = node->right;
+                        parent1->balance += 1;
+                        parent1->left->right = nullptr;
                     } else {
-                        node->parent->left = node->right;
+                        parent1->left = node->left;
+                        parent1->balance -= 1;
+                        parent1->left->left = nullptr;
                     }
+                    node->parent->left->parent = node->parent;
                 } else {
                     if (node->left == nullptr) {
-                        node->parent->right = node->right;
+                        parent1->right = node->right;
+                        parent1->balance += 1;
+                        parent1->right->right = nullptr;
                     } else {
-                        node->parent->right = node->right;
+                        parent1->right = node->left;
+                        parent1->balance -= 1;
+                        parent1->right->left = nullptr;
                     }
+                    node->parent->right->parent = node->parent;
                 }
                 upOut(node->parent);
             }
@@ -340,10 +348,14 @@ void avlTree::remove(const int value, Node *node) {
                 remove(value, symmetric);
             }
         } else {
-            remove(value, node->left);
-            remove(value, node->right);
+            if (node->left != nullptr) {
+                remove(value, node->left);
+            }
+            if (node->right != nullptr) {
+                remove(value, node->right);
+            }
         }
-    }
+
 }
 
 std::vector<int> *avlTree::inorder() const {
@@ -352,21 +364,22 @@ std::vector<int> *avlTree::inorder() const {
     } else {
         auto* tree = new std::vector<int>();
         inorder(firstNode,tree);
+        for(auto i = tree->begin(); i != tree->end(); i++)
+        {
+            std::cout<<*i<<endl;
+        }
         return tree;
     }
 }
 
 std::vector<int> *avlTree::inorder(Node *node, std::vector<int> *tree) const {
     // Linke seite
-    if (node->left == nullptr) {
-        tree->push_back(node->key);
-    } else {
+    if (node->left != nullptr) {
         inorder(node->left, tree);
     }
+    tree->push_back(node->key);
     // Rechte Seite
-    if (node->right == nullptr) {
-        tree->push_back(node->key);
-    } else {
+    if (node->right != nullptr) {
         inorder(node->right,tree);
     }
     return tree;

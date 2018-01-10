@@ -26,7 +26,7 @@ TEST(testList, InOrder) {
     tree.insert(1);
     tree.insert(3);
     auto vector1 = new vector<int>{1,2,3};
-    compareVectors(vector1, tree.inorder());
+    EXPECT_TRUE(compareVectors(vector1, tree.inorder()));
 }
 
 TEST(testList, InsertTwiceSameValue) {
@@ -34,14 +34,7 @@ TEST(testList, InsertTwiceSameValue) {
     tree.insert(3);
     tree.insert(3);
     auto vector1 = new vector <int> {3};
-    compareVectors(vector1,tree.inorder());
-}
-
-TEST(testList, InsertOneDeleteOne) {
-    avlTree tree;
-    tree.insert(3);
-    tree.remove(3);
-    EXPECT_EQ(nullptr,tree.inorder());
+    EXPECT_TRUE(compareVectors(vector1,tree.inorder()));
 }
 
 TEST(testList, InsertOneCaseOneAndTwo) {
@@ -50,19 +43,19 @@ TEST(testList, InsertOneCaseOneAndTwo) {
     tree.insert(6);
     //Einfügen Rechts Fall 2
     auto vector1 = new vector <int>{5,6};
-    compareVectors(vector1, tree.inorder());
+    EXPECT_TRUE(compareVectors(vector1, tree.inorder()));
     // Einfügen Links Fall 1
     tree.insert(4);
     auto vector2 = new vector <int>{4,5,6};
-    compareVectors(tree.inorder(),vector2);
+    EXPECT_TRUE(compareVectors(tree.inorder(),vector2));
     // Einfügen Links Fall 2
     auto vector3 = new vector <int> {3,4,5,6};
     tree.insert(3);
-    compareVectors(tree.inorder(),vector3);
+    EXPECT_TRUE(compareVectors(tree.inorder(),vector3));
     //Einfügen rechts Fall 1
     vector3->push_back(7);
     tree.insert(7);
-    compareVectors(tree.inorder(),vector3);
+    EXPECT_TRUE(compareVectors(tree.inorder(),vector3));
 }
 
 TEST(testList, RotateRight_RotateLeft) {
@@ -71,13 +64,13 @@ TEST(testList, RotateRight_RotateLeft) {
     tree.insert(4);
     tree.insert(3);
     auto vector1 = new vector <int> {3,4,5};
-    compareVectors(vector1,tree.inorder());
+    EXPECT_TRUE(compareVectors(vector1,tree.inorder()));
     avlTree tree2;
+    tree2.insert(3);
+    tree2.insert(4);
     tree2.insert(5);
-    tree2.insert(6);
-    tree2.insert(7);
-    auto vector2 = new vector <int> {3,4,5,6};
-    compareVectors(vector2,tree.inorder());
+    auto vector2 = new vector <int> {3,4,5};
+    EXPECT_TRUE(compareVectors(vector2,tree.inorder()));
 }
 
 TEST(testList, RotateLeftRight_RightLeft) {
@@ -86,11 +79,67 @@ TEST(testList, RotateLeftRight_RightLeft) {
     tree.insert(3);
     tree.insert(4);
     auto vector1 = new vector <int> {3,4,5};
-    compareVectors(vector1,tree.inorder());
+    EXPECT_TRUE(compareVectors(vector1,tree.inorder()));
     avlTree tree2;
     tree2.insert(5);
     tree2.insert(7);
     tree2.insert(6);
     auto vector2 = new vector <int> {5,6,7};
-    compareVectors(vector2,tree.inorder());
+    EXPECT_TRUE(compareVectors(vector2,tree2.inorder()));
+}
+
+TEST(testList, RemoveOneCaseTwo) {
+    avlTree tree;
+    tree.insert(3);
+    tree.insert(4);
+    tree.remove(4);
+    EXPECT_FALSE(tree.search(4));
+    EXPECT_TRUE(compareVectors(tree.inorder(),new vector <int>{3}));
+}
+
+TEST(testList, RemoveOneCaseOne) {
+    avlTree tree;
+    tree.insert(5);
+    tree.insert(4);
+    tree.insert(6);
+    tree.remove(4);
+    EXPECT_FALSE(tree.search(4));
+    auto vector2 = new vector <int> {5,6};
+    EXPECT_TRUE(compareVectors(vector2,tree.inorder()));
+}
+
+TEST(testList, RemoveRoot) {
+    avlTree tree;
+    tree.insert(3);
+    tree.remove(3);
+    EXPECT_FALSE(tree.search(3));
+}
+
+
+TEST(testList, RemoveBothLeaves) {
+    avlTree tree;
+    tree.insert(3);
+    tree.insert(2);
+    tree.insert(9);
+    tree.insert(4);
+    tree.insert(1);
+    tree.insert(10);
+    tree.remove(4);
+    EXPECT_FALSE(tree.search(4));
+    auto vector1 = new vector <int> {1,2,3,9,10};
+    EXPECT_TRUE(compareVectors(vector1,tree.inorder()));
+}
+
+TEST(testList, RemoveOneLeaf) {
+    avlTree tree;
+    tree.insert(5);
+    tree.insert(4);
+    tree.insert(8);
+    tree.insert(6);
+    tree.insert(1);
+    tree.insert(9);
+    tree.remove(4);
+    EXPECT_FALSE(tree.search(4));
+    auto vector1 = new vector<int> {1,5,6,8,9};
+    EXPECT_TRUE(compareVectors(vector1,tree.inorder()));
 }
