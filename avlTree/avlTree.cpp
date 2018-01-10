@@ -264,3 +264,52 @@ void avlTree::remove(const int value, Node *node) {
     }
 }
 
+std::vector<int> *avlTree::inorder() const {
+    if (firstNode == nullptr) {
+        return nullptr;
+    } else {
+        auto* tree = new std::vector<int>();
+        inorder(firstNode,tree);
+        return tree;
+    }
+}
+
+std::vector<int> *avlTree::inorder(Node *node, std::vector<int> *tree) const {
+    // Linke seite
+    if (node->left == nullptr) {
+        tree->push_back(node->key);
+    } else {
+        inorder(node->left, tree);
+    }
+    // Rechte Seite
+    if (node->right == nullptr) {
+        tree->push_back(node->key);
+    } else {
+        inorder(node->right,tree);
+    }
+    return tree;
+}
+
+std::vector<int> *avlTree::preorder() const {
+    if (firstNode == nullptr) {
+        return nullptr;
+    } else {
+        auto tree = new std::vector<int>();
+        preorder(firstNode, tree);
+    }
+}
+
+std::vector<int> *avlTree::preorder(Node *node, std::vector<int> *tree) const {
+    if (node == firstNode) {
+        tree->push_back(firstNode->key);
+    }
+    if (node->left != nullptr) {
+        tree->push_back(node->key);
+        preorder(node->left,tree);
+    }
+    if(node->right != nullptr) {
+        tree->push_back(node->key);
+        preorder(node->right, tree);
+    }
+    return tree;
+}

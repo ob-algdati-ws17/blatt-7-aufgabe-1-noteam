@@ -29,7 +29,6 @@ private :
         ~Node();
 
 
-
         bool hasChild();
     };
     Node* firstNode = nullptr;
@@ -58,6 +57,11 @@ private :
 
     int getHeight(Node* p);
 
+
+    std::vector<int> *preorder(Node* node,std::vector<int>* tree) const;  // (Hauptreihenfolge)
+    std::vector<int> *inorder(Node* node,std::vector<int>* tree) const;   // (Symmetrische Reihenfolge)
+//    std::vector<int> *postorder(Node* node,std::vector<int>* tree) const; // (Nebenreihenfolge)
+
 public :
 
     ~avlTree();
@@ -68,6 +72,8 @@ public :
     bool search(const int value) const;
     bool search(const int value, Node* node) const;
 
-
+    std::vector<int> *preorder() const;  // (Hauptreihenfolge)
+    std::vector<int> *inorder() const;   // (Symmetrische Reihenfolge)
+    std::vector<int> *postorder() const; // (Nebenreihenfolge)
 
 };
