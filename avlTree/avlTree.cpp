@@ -53,35 +53,38 @@ avlTree::Node *avlTree::getSymmetricFollower(Node *node) {
 
 //Balancing Methoden
 void avlTree::upIn(Node *start) {
-    if (start == firstNode) {
-        return;
-    } else {
-        if (start->key < start->parent->key) {
-           if (start->parent->balance = 1){
-               start->parent->balance = 0;
-           } else if (start->parent->balance = 0) {
-               start->parent->balance = -1;
-               upIn(start->parent);
-           } else if (start->parent->balance = -1){
-                rotateRight(start->parent);
-           } else {
-               rotateLeft(start);
-               rotateRight(start->parent);
-           }
-        } else if (start->key > start->parent->key) {
-            if (start->parent->balance = 1) {
-                start->parent->balance = 0;
-            } else if (start->parent->balance = 0) {
-                start->parent->balance = 1;
-                upIn(start->parent);
-            } else if (start->balance = 1) {
-                rotateLeft(start->parent);
-            } else {
-                rotateRight(start);
-                rotateLeft(start->parent);
+    if (start != nullptr && start->parent != nullptr) {
+        if (start == firstNode) {
+            return;
+        } else {
+            if (start->key < start->parent->key) {
+                if (start->parent->balance = 1){
+                    start->parent->balance = 0;
+                } else if (start->parent->balance = 0) {
+                    start->parent->balance = -1;
+                    upIn(start->parent);
+                } else if (start->parent->balance = -1){
+                    rotateRight(start->parent);
+                } else {
+                    rotateLeft(start);
+                    rotateRight(start->parent);
+                }
+            } else if (start->key > start->parent->key) {
+                if (start->parent->balance = 1) {
+                    start->parent->balance = 0;
+                } else if (start->parent->balance = 0) {
+                    start->parent->balance = 1;
+                    upIn(start->parent);
+                } else if (start->balance = 1) {
+                    rotateLeft(start->parent);
+                } else {
+                    rotateRight(start);
+                    rotateLeft(start->parent);
+                }
             }
         }
     }
+
 }
 
 void avlTree::upOut(Node* start){
@@ -196,14 +199,14 @@ bool avlTree::search(const int value) const {
 }
 
 bool avlTree::search(const int value, Node *node) const {
-    if (node->key == value) {
+    if (node == nullptr) {
+        return false;
+    } else if (node->key == value) {
         return true;
     } else if (value < node->key) {
         return search(value,node->left);
     } else if ( value > node->key) {
         return search(value,node->right);
-    } else {
-        return false;
     }
 }
 
@@ -220,17 +223,40 @@ void avlTree::remove(const int value) {
 
 void avlTree::remove(const int value, Node *node) {
     int q = 0;
-   // bool right_side = true;
     if (node->key == value) {
-        // Fall 1 nur Blötter
         if (!node->hasChild()) {
             if (node == node->parent->left) {
                 node->parent->left = nullptr;
-               // q = getHeight(node->parent);
-               //  right_side = false;
+                q = getHeight(node->parent);
+                if (q == 1) {
+                    node->parent->balance = 1;
+                } else if (q == 0){
+                    upOut(node->parent);
+                } else {
+                    if (node->parent->right->left != nullptr) {
+                        rotateRight(node->parent->right);
+                        rotateLeft(node->parent);
+                    } else {
+                        rotateLeft(node->parent);
+                    }
+                    upOut(node->parent);
+                }
             } else {
                 node->parent->right = nullptr;
-               // q = getHeight(node->parent);
+                q = getHeight(node->parent);
+                if (q == 1) {
+                    node->parent->balance = 1;
+                } else if (q == 0){
+                    upOut(node->parent);
+                } else {
+                    if (node->parent->left->right != nullptr) {
+                        rotateLeft(node->parent->left);
+                        rotateRight(node->parent);
+                    } else {
+                        rotateRight(node->parent);
+                    }
+                    upOut(node->parent);
+                }
             }
             upOut(node->parent);
 
